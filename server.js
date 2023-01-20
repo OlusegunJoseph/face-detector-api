@@ -1,5 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
+const bcrypt = require("bcrypt-nodejs");
 
 const app = express();
 
@@ -11,7 +12,7 @@ const database = {
       id: "123",
       name: "john",
       email: "josh@gmail.com",
-      password: "cookies",
+
       entries: 0,
       joined: new Date(),
     },
@@ -19,9 +20,16 @@ const database = {
       id: "124",
       name: "sally",
       email: "sally@gmail.com",
-      password: "apples",
+
       entries: 0,
       joined: new Date(),
+    },
+  ],
+  login: [
+    {
+      id: "987",
+      hash: "",
+      email: "john@gmail.com",
     },
   ],
 };
@@ -43,6 +51,9 @@ app.post("/signin", (req, res) => {
 
 app.post("/register", (req, res) => {
   const { email, name, password } = req.body;
+  bcrypt.hash(password, null, null, function (err, hash) {
+    console.log(hash);
+  });
   database.users.push({
     id: "125",
     name: name,
@@ -83,14 +94,18 @@ app.post("/image", (req, res) => {
   }
 });
 
+// bcrypt.hash("bacon", null, null, function (err, hash) {
+//   //Store hash in your password DB
+// });
+
+// bcrypt.compare("bacon", hash, function (err, res) {
+//   // res == true
+// });
+
+// bcrypt.compare("veggies", hash, function (err, res) {
+//   // res == false
+// });
+
 app.listen(3000, () => {
   console.log("app is running on port 3000");
 });
-
-/*
-/ --> res = this is working
-/signin --> POST = to return either success or fail
-/register --> POST = to return user
-/profile: optional parameter userId --- GET = to return user
-/image --> PUT --> return user or whatever we updated
-*/
